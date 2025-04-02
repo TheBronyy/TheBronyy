@@ -1,57 +1,116 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- build:css styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <!-- endbuild -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Смена фона с музыкой</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        #now-playing {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
-    <div class="loading-screen">
-        <header class="logo-container">
-            <img src="./images/logo.png" alt="Logo">
-        </header>
-
-        <div class="content-container">
-            <section class="board server-info">
-                <header class="title">Server Info</header>
-                <div class="content">
-                    <img id="mappreview" src="asset://mapimage/unknown" class="preview" align="left">
-                    <p id="servername" class="server-name"></p>
-                    <p id="mapname" class="map-name"></p>
-                    <p id="playerslots" class="player-slots"></p>
-                </div>
-            </section>
-
-            <section class="board-divider"></section>
-
-            <section class="board server-rules">
-                <header class="title">Rules</header>
-                <ol class="rules">
-                    <li>No chat/mic spam</li>
-                    <li>No prop killing</li>
-                    <li>No RDM'ing</li>
-                    <li>No ghosting</li>
-                </ol>
-            </section>
-        </div>
-
-        <div class="loading-bar">
-            <div id="progressbar" class="progress-bar"></div>
-            <span id="status" class="status">Connecting...</span>
-            <span id="percentage" class="percentage">0%</span>
-        </div>
-    </div>
-
-    <!-- build:js scripts/main.js -->
-    <script src="scripts/main.js"></script>
-    <!-- endbuild -->
-
-    <!-- build:remove -->
-    <script src="scripts/contentloaded.js"></script>
-    <script src="scripts/main.js"></script>
-    <!-- endbuild -->
+    <div id="background"></div>
+    <audio id="bg-music" autoplay></audio>
+    <div id="now-playing">▶ Now playing: <span id="track-name"></span> | <span id="timer">0:00</span></div>
+    <script>
+        const tracks = {
+            "track1.mp3": "Vandoorea: Freeman You Fool!",
+            "track2.mp3": "Undertale NMD OST: The Contract is Truly Finished",
+			"track3.mp3": "Katana Zero OST: Hit The Floor",
+			"track4.mp3": "Katana Zero OST: You Will Never Know",
+			"track5.mp3": "Katana Zero Ost-version",
+			"track6.mp3": "Yakuza 0 OST: 24-Hour Cinderella 8-bit",
+			"track7.mp3": "Doom Theme",
+			"track8.mp3": "Simon Chylinski: Abandon Ship",
+			"track9.mp3": "Hotline Miami OST: Knock-Knock"
+        };
+        
+        let lastImage = "";
+        let lastTrack = "";
+        
+        function getRandomImage() {
+            let randomImage;
+            do {
+                const randomIndex = Math.floor(Math.random() * 54) + 1;
+                randomImage = `images/image${randomIndex}.jpg`;
+            } while (randomImage === lastImage);
+            lastImage = randomImage;
+            return randomImage;
+        }
+        
+        function changeBackground() {
+            const background = document.getElementById("background");
+            background.style.backgroundImage = `url('${getRandomImage()}')`;
+        }
+        
+        function getRandomTrack() {
+            let track;
+            do {
+                const trackKeys = Object.keys(tracks);
+                const randomIndex = Math.floor(Math.random() * trackKeys.length);
+                track = trackKeys[randomIndex];
+            } while (track === lastTrack);
+            lastTrack = track;
+            return track;
+        }
+        
+        function playMusic() {
+            const audio = document.getElementById("bg-music");
+            const trackName = document.getElementById("track-name");
+            const timer = document.getElementById("timer");
+            if (audio) {
+                const track = getRandomTrack();
+                audio.src = `music/${track}`;
+                audio.volume = 0.15;
+                audio.play().catch(error => console.log("Ошибка воспроизведения аудио:", error));
+                audio.onended = playMusic;
+                trackName.textContent = tracks[track];
+                resetTimer();
+            }
+        }
+        
+        function resetTimer() {
+            const audio = document.getElementById("bg-music");
+            const timer = document.getElementById("timer");
+            clearInterval(timer.interval);
+            timer.textContent = "0:00";
+            
+            timer.interval = setInterval(() => {
+                let currentTime = Math.floor(audio.currentTime);
+                let minutes = Math.floor(currentTime / 60);
+                let seconds = currentTime % 60;
+                timer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+        
+        setInterval(changeBackground, 5500);
+        changeBackground();
+        document.addEventListener("DOMContentLoaded", playMusic);
+    </script>
 </body>
 </html>
