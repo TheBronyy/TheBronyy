@@ -47,7 +47,9 @@
 			"track6.mp3": "Yakuza 0 OST: 24-Hour Cinderella 8-bit",
 			"track7.mp3": "Doom Theme",
 			"track8.mp3": "Simon Chylinski: Abandon Ship",
-			"track9.mp3": "Hotline Miami OST: Knock-Knock"
+			"track9.mp3": "Hotline Miami OST: Knock-Knock",
+			"track10.mp3": "shoemanbundy - Tomorrow I'll",
+			"track11.mp3": "unknown - nekomimi",
         };
         
         let lastImage = "";
@@ -56,7 +58,7 @@
         function getRandomImage() {
             let randomImage;
             do {
-                const randomIndex = Math.floor(Math.random() * 54) + 1;
+                const randomIndex = Math.floor(Math.random() * 94) + 1;
                 randomImage = `images/image${randomIndex}.jpg`;
             } while (randomImage === lastImage);
             lastImage = randomImage;
