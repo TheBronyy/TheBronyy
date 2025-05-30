@@ -58,7 +58,7 @@
         function getRandomImage() {
             let randomImage;
             do {
-                const randomIndex = Math.floor(Math.random() * 94) + 1;
+                const randomIndex = Math.floor(Math.random() * 138) + 1;
                 randomImage = `images/image${randomIndex}.jpg`;
             } while (randomImage === lastImage);
             lastImage = randomImage;
@@ -88,7 +88,7 @@
             if (audio) {
                 const track = getRandomTrack();
                 audio.src = `music/${track}`;
-                audio.volume = 0.15;
+                audio.volume = 0.12;
                 audio.play().catch(error => console.log("Ошибка воспроизведения аудио:", error));
                 audio.onended = playMusic;
                 trackName.textContent = tracks[track];
